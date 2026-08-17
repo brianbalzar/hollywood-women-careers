@@ -1,0 +1,2 @@
+model,performer_years,performers,observed_exits,interaction_wald_chisq,interaction_df,interaction_p_value
+discrete-time five-year career interruption,246081,20561,12506,56.0004700668559,4,2.00472105032824e-11

@@ -1,0 +1,48 @@
+# --- R / RStudio -----------------------------------------------------------
+.Rproj.user/
+.Rhistory
+.RData
+.Ruserdata
+.Renviron
+renv/library/
+renv/staging/
+
+# --- Quarto ----------------------------------------------------------------
+.quarto/
+/.quarto/
+**/*.quarto_ipynb
+reports/_site/
+reports/*_files/
+_quarto_internal_scss_error.scss
+
+# --- Source data -----------------------------------------------------------
+# IMDb and Billboard source records are never redistributed. Download them
+# locally with scripts/01_download_imdb.R and scripts/11_download_billboard.R.
+# The *_manifest.csv files are provenance (checksums and sizes), not data.
+data/raw/*
+data/processed/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+!data/raw/*_manifest.csv
+
+# --- Fitted models ---------------------------------------------------------
+# career_exit_model.rds is ~38 MB and regenerates from scripts/07_fit_models.R.
+# Committing it would make the repo an order of magnitude larger than its code.
+outputs/models/*.rds
+
+# --- Design-system build artefacts -----------------------------------------
+# The PNGs in social/ are the deliverable; the HTML that produces them is
+# regenerable and each copy inlines ~215 KB of base64 font.
+social/*.html
+design-system/build/node_modules/
+design-system/build/shots/
+design-system/build/package*.json
+design-system/report-proof.html
+**/__pycache__/
+*.pyc
+
+# --- General ---------------------------------------------------------------
+outputs/**/*.pdf
+node_modules/
+.DS_Store
+Thumbs.db

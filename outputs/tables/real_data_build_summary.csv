@@ -1,0 +1,2 @@
+credits,performers,titles,first_year,last_year,parquet_path,database_path
+7927471,156950,1547880,1995,2025,C:/Users/BrianBalzar/Documents/Codex/data_cache/hollywood-women-careers/processed/credits_base.parquet,C:/Users/BrianBalzar/Documents/Codex/data_cache/hollywood-women-careers/hollywood.duckdb

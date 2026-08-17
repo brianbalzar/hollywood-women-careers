@@ -1,0 +1,18 @@
+Package: hollywoodwomencareers
+Type: Project
+Title: Age and Screen Acting Opportunity
+Version: 0.1.0
+Authors@R: person("Brian", "Balzar", role = c("aut", "cre"))
+Description: Reproducible analysis of age-related screen acting opportunity by
+    IMDb principal credit class in American film and scripted television.
+License: file LICENSE
+Encoding: UTF-8
+Imports:
+    arrow,
+    data.table,
+    DBI,
+    duckdb,
+    ggplot2,
+    scales,
+    survival,
+    testthat

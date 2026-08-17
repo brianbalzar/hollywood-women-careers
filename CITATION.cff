@@ -1,0 +1,26 @@
+cff-version: 1.2.0
+title: Women's Career Lifespans in U.S. Entertainment
+message: If you use this analysis or its derived tables, please cite it.
+type: dataset
+authors:
+  - given-names: Brian
+    family-names: Balzar
+abstract: >-
+  A reproducible analysis of how screen-acting opportunity changes with
+  performer age, and whether the age pattern differs between women-coded and
+  men-coded IMDb credit classes in American film and scripted television, with
+  a parallel analysis of Billboard Hot 100 solo artists. Distinguishes
+  confirmed five-year career interruption from career tapering. Public credits
+  measure observed opportunity and do not establish its cause.
+keywords:
+  - gender and age in entertainment
+  - IMDb
+  - Billboard Hot 100
+  - survival analysis
+  - reproducible research
+license: CC-BY-4.0
+license-url: https://creativecommons.org/licenses/by/4.0/
+repository-code: https://github.com/brianbalzar/hollywood-women-careers
+url: https://brianbalzar.github.io/hollywood-women-careers/
+date-released: 2026-08-17
+version: 0.1.0

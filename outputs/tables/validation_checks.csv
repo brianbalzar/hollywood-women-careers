@@ -1,0 +1,12 @@
+check,passed,detail
+six source datasets recorded,TRUE,"6 files; 1,886,403,900 compressed bytes"
+required analytic tables present,TRUE,"credits_base, annual_opportunity, opportunity_panel, career_spells, career_hazard_panel, career_taper_panel, career_taper_by_age"
+credit table has valid age and birth fields,TRUE,"7,927,471 credits; ages 0 to 100"
+opportunity panel outcomes and ages valid,TRUE,"3,481,550 performer-years; ages 19 to 80"
+career spell chronology valid,TRUE,"20,561 spells; 0 reversed"
+career taper panel has valid post-peak ratios,TRUE,"222,315 credited post-peak performer-years; ratios 0.012 to 1"
+required result tables written,TRUE,17 of 17 present
+bootstrap intervals and estimates valid,TRUE,overall 43; film 42; television 44
+Billboard solo-artist classification coverage reported,TRUE,49.8% of chart rows classified to binary-coded solo artists
+Billboard age summaries valid,TRUE,4208 classified solo artist-years
+Billboard five-year returns valid,TRUE,27 classification-by-age-band estimates

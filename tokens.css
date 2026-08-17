@@ -1,0 +1,182 @@
+/* ============================================================================
+ * tokens.css — Women's Career Lifespans in U.S. Entertainment
+ * Design contract. Every value the refined previews use lives here; the
+ * previews carry no raw hex and no magic pixel value that is not a token.
+ * Intended repo path: design-system/tokens.css
+ *
+ * Derived from: "Career Lifespans Report.dc.html" (report opening, Figure 1
+ * full-bleed small multiples, Figure 2 carded companion).
+ *
+ * Fonts (load once per page, or self-host and keep the family names):
+ *   https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,300;1,6..72,400&family=IBM+Plex+Sans:wght@400;450;500;600&display=swap
+ *
+ * LOCKED, do not re-derive: --series-1 / --series-2 slot order and hues,
+ * the status colours as non-series, and the rule that scope is faceted.
+ * ==========================================================================*/
+
+.viz-root, .ds-root {
+  color-scheme: light;
+
+  /* ---- surfaces & plane ------------------------------------------------ */
+  --surface-1:        #fcfcfb;   /* carded figures, tooltips, tiles         */
+  --page-plane:       #f9f9f7;   /* the page itself; full-bleed figure bed  */
+
+  /* ---- ink ------------------------------------------------------------- */
+  --text-primary:     #0b0b0b;   /* headlines, hero numerals, table keys    */
+  --text-body:        #1c1b19;   /* running body copy (softer than primary) */
+  --text-standfirst:  #3a3936;   /* standfirst and hero gloss              */
+  --text-secondary:   #52514e;   /* notes, boundaries, sources, legends     */
+  --text-muted:       #898781;   /* kickers, axis labels, tile meta        */
+
+  /* ---- chrome ---------------------------------------------------------- */
+  --gridline:         #e1e0d9;   /* chart gridlines, table row rules        */
+  --baseline:         #c3c2b7;   /* chart axis rule                         */
+  --hairline:         rgba(11,11,11,0.10);  /* card borders, tile dividers  */
+  --hairline-strong:  rgba(11,11,11,0.14);  /* figure open/close rules      */
+  --hairline-soft:    rgba(11,11,11,0.08);  /* between caption ledger rows  */
+  --rule-emphatic:    #0b0b0b;   /* 2px rule opening the boundary section   */
+
+  /* ---- categorical series (fixed order, never cycled) ------------------ */
+  --series-1:         #2a78d6;   /* slot 1 — women-coded                    */
+  --series-2:         #eb6834;   /* slot 2 — men-coded                      */
+  --series-ghost:     #c3c2b7;   /* non-identity context trace             */
+
+  /* ---- sequential (single hue, light -> dark) -------------------------- */
+  --seq-100: #cde2fb; --seq-200: #9ec5f4; --seq-300: #6da7ec;
+  --seq-400: #3987e5; --seq-500: #256abf; --seq-600: #184f95;
+  --seq-700: #0d366b;
+
+  /* ---- status (reserved; never a series) ------------------------------- */
+  --status-good:      #0ca30c;
+  --status-warning:   #fab219;
+  --status-serious:   #ec835a;
+  --status-critical:  #d03b3b;
+  /* Text-legible companion to --status-serious for 12–13px deltas, where
+     #ec835a does not clear contrast on --page-plane. Needs validation before
+     it is treated as part of the palette — see NOTES.md. */
+  --delta-negative:   #c0472a;
+
+  /* ---- type: families -------------------------------------------------- */
+  --font-serif: Newsreader, Georgia, "Times New Roman", serif;
+  --font-sans:  "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  /* Serif carries: page title, standfirst, figure titles, every displayed
+     numeral. Sans carries: body, notes, sources, tables, all chart text. */
+
+  /* ---- type: scale ----------------------------------------------------- */
+  --fs-hero:        150px;  /* the one hero numeral per page               */
+  --fs-display:      76px;  /* page title                                  */
+  --fs-tile:         38px;  /* stat-tile value                             */
+  --fs-h1:           34px;  /* lead figure title                           */
+  --fs-h2:           30px;  /* section heading                             */
+  --fs-h3:           24px;  /* companion / carded figure title             */
+  --fs-standfirst:   23px;
+  --fs-body:         18px;  /* running body copy                           */
+  --fs-body-tight:   17px;  /* hero gloss, dense explanatory copy          */
+  --fs-lede:      15.5px;   /* boundary statement                          */
+  --fs-small:        15px;  /* figure subtitle, panel titles               */
+  --fs-caption:      14px;  /* carded figure subtitle                      */
+  --fs-micro:      13.5px;  /* notes, boundaries, sources, legend, readout */
+  --fs-note:       12.5px;  /* tile labels, table body, axis note          */
+  --fs-label:        12px;  /* kickers                                     */
+  --fs-axis:       11.5px;  /* axis ticks, caption ledger labels, annots   */
+  --fs-parity:       11px;  /* the parity rule label                       */
+
+  /* ---- type: weight, leading, tracking --------------------------------- */
+  --fw-serif:        300;   /* standfirst, hero numeral                    */
+  --fw-serif-reg:    400;   /* titles and displayed numerals               */
+  --fw-body:         400;
+  --fw-medium:       500;
+  --fw-label:        600;   /* kickers, table heads, ledger labels         */
+  --lh-hero:        0.82;
+  --lh-display:     1.02;
+  --lh-title:       1.15;
+  --lh-standfirst:   1.5;
+  --lh-body:        1.65;
+  --lh-note:         1.6;
+  --lh-ui:           1.4;
+  --tr-hero:      -0.04em;
+  --tr-display:  -0.025em;
+  --tr-title:     -0.02em;
+  --tr-h3:       -0.015em;
+  --tr-label:      0.13em;  /* kickers                                     */
+  --tr-ledger:      0.1em;  /* caption ledger labels                       */
+  --tr-parity:     0.06em;
+
+  /* ---- space ----------------------------------------------------------- */
+  --sp-1:  4px;  --sp-2:  8px;  --sp-3: 12px;  --sp-4: 16px;
+  --sp-5: 24px;  --sp-6: 32px;  --sp-7: 48px;  --sp-8: 64px;
+  --sp-fig:      64px;   /* body copy -> full-bleed figure                 */
+  --sp-section:  80px;   /* between report sections                        */
+  --sp-lead:     88px;   /* page top to masthead                          */
+
+  /* ---- measure & page frame ------------------------------------------- */
+  --measure:      700px;  /* text column: title, body, captions            */
+  --figure-max:  1180px;  /* full-bleed figure width                       */
+  --page-gutter:   40px;
+  --ledger-label: 118px;  /* caption ledger label column                   */
+
+  /* ---- chart geometry -------------------------------------------------- */
+  --chart-stroke:      2.25px;  /* categorical series line                 */
+  --chart-ghost:        1.5px;  /* ghost trace, dashed 2 3.5               */
+  --chart-rule:           1px;  /* gridline, axis rule, crosshair          */
+  --chart-dot:            4px;  /* annotation dot radius                   */
+  --chart-dot-hover:    4.5px;
+  --chart-dot-halo:       2px;  /* dot stroke, painted in the surface      */
+  --panel-gap:           24px;  /* between small multiples                 */
+  --panel-ratio:      360/250;  /* small-multiple viewBox                  */
+  --companion-ratio:  700/300;  /* carded companion viewBox                */
+  --card-pad:            26px;
+  --card-radius:           0;   /* squared: the card marks scope, not style */
+}
+
+/* ---- dark mode --------------------------------------------------------- *
+ * Declared, not yet reviewed. Light mode leads this round; the dark values
+ * are the bundle's validated re-steps, carried forward unchanged so the
+ * SCSS layer has something correct to compile. See NOTES.md.
+ * ----------------------------------------------------------------------- */
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) .viz-root,
+  :root:where(:not([data-theme="light"])) .ds-root {
+    color-scheme: dark;
+    --surface-1:        #1a1a19;
+    --page-plane:       #0d0d0d;
+    --text-primary:     #ffffff;
+    --text-body:        #ededea;
+    --text-standfirst:  #d8d7d0;
+    --text-secondary:   #c3c2b7;
+    --text-muted:       #898781;
+    --gridline:         #2c2c2a;
+    --baseline:         #383835;
+    --hairline:         rgba(255,255,255,0.10);
+    --hairline-strong:  rgba(255,255,255,0.16);
+    --hairline-soft:    rgba(255,255,255,0.07);
+    --rule-emphatic:    #ffffff;
+    --series-1:         #3987e5;
+    --series-2:         #d95926;
+    --series-ghost:     #4a4a46;
+    --status-good:      #0ca30c;
+    --delta-negative:   #f08a6a;
+  }
+}
+:root[data-theme="dark"] .viz-root,
+:root[data-theme="dark"] .ds-root {
+  color-scheme: dark;
+  --surface-1:        #1a1a19;
+  --page-plane:       #0d0d0d;
+  --text-primary:     #ffffff;
+  --text-body:        #ededea;
+  --text-standfirst:  #d8d7d0;
+  --text-secondary:   #c3c2b7;
+  --text-muted:       #898781;
+  --gridline:         #2c2c2a;
+  --baseline:         #383835;
+  --hairline:         rgba(255,255,255,0.10);
+  --hairline-strong:  rgba(255,255,255,0.16);
+  --hairline-soft:    rgba(255,255,255,0.07);
+  --rule-emphatic:    #ffffff;
+  --series-1:         #3987e5;
+  --series-2:         #d95926;
+  --series-ghost:     #4a4a46;
+  --status-good:      #0ca30c;
+  --delta-negative:   #f08a6a;
+}

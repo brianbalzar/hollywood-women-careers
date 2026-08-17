@@ -1,0 +1,5 @@
+match_status,credit_group,artist_strings,chart_rows,songs,chart_years,chart_row_share
+matched,men-coded,856,50484,4370,2768,0.312207792207792
+matched,other-coded,13,1314,157,63,0.00812615955473098
+matched,women-coded,508,30060,2280,1512,0.185899814471243
+unmatched,,4573,79842,6584,6887,0.493766233766234

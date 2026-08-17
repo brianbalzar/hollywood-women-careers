@@ -1,0 +1,421 @@
+---
+title: "Women’s Career Lifespans in U.S. Entertainment"
+subtitle: "Screen opportunity and Billboard Hot 100 visibility by age"
+author: "Brian Balzar"
+date: last-modified
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    embed-resources: true
+    theme: [cosmo, hwc.scss]
+    code-fold: true
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{r}
+#| label: setup
+source("../R/paths.R")
+library(data.table)
+library(knitr)
+
+table_path <- function(name) project_path("outputs", "tables", name)
+figure_path <- function(name) project_path("outputs", "figures", name)
+
+role_share <- fread(table_path("women_role_share.csv"))
+hazard_ratio <- fread(table_path("adjusted_exit_hazard_ratio.csv"))
+period <- fread(table_path("period_sensitivity.csv"))
+gap_sensitivity <- fread(table_path("gap_definition_sensitivity.csv"))
+build <- fread(table_path("real_data_build_summary.csv"))
+spell_summary <- fread(table_path("career_spell_summary.csv"))
+validation <- fread(table_path("validation_checks.csv"))
+billboard_return <- fread(table_path("billboard_return_by_age.csv"))
+billboard_weighting <- fread(table_path("billboard_weighting_sensitivity.csv"))
+billboard_coverage <- fread(table_path("billboard_analysis_coverage.csv"))
+billboard_match <- fread(table_path("billboard_match_coverage.csv"))
+
+pct <- function(x, digits = 1) sprintf(paste0("%.", digits, "f%%"), 100 * x)
+num <- function(x) format(x, big.mark = ",", scientific = FALSE)
+
+share_at <- function(scope_name, age_value) {
+  role_share[scope == scope_name & age == age_value, women_coded_share]
+}
+hazard_at <- function(age_value) hazard_ratio[age == age_value]
+billboard_weight_at <- function(weight_name, group_name) {
+  billboard_weighting[weighting == weight_name & credit_group == group_name]
+}
+billboard_return_at <- function(group_name, band_start) {
+  billboard_return[
+    credit_group == group_name & age_band_start == band_start,
+    return_rate
+  ]
+}
+```
+
+## How to read the key measures
+
+### “Women-coded” and “men-coded”
+
+These are IMDb metadata classifications, not self-identified gender. For each
+performer, the analysis counts principal credits that IMDb labels `actress` or
+`actor`. A performer is **women-coded** when at least 90% of those classified
+credits are labeled `actress`, and **men-coded** when at least 90% are labeled
+`actor`. Performers between those thresholds are classified as ambiguous and
+excluded from binary comparisons.
+
+### “Women-coded opportunity share”
+
+An opportunity unit is one principal cast credit in a film, or participation in
+one television series during one calendar year. At each age, women-coded
+opportunity share is:
+
+> Opportunities credited to women-coded performers ÷ opportunities credited to
+> women-coded plus men-coded performers.
+
+It is not the percentage of women who worked, the share of every speaking role,
+screen time, or an individual performer’s probability of being hired.
+
+### “Five-year career interruption”
+
+This is the last credited year before at least five consecutive calendar years
+without another qualifying principal opportunity. It is a **confirmed
+interruption**, not necessarily permanent retirement: a performer can later
+return. A reduction in the number or prominence of roles does not count, and
+recent final credits are censored until five follow-up years are observable.
+The interruption hazard is the conditional probability that a credited year at
+a given age is the beginning of such an interruption among established careers
+that have not already experienced one.
+
+## Executive finding
+
+The observation is substantially correct, but the age pattern is more revealing
+than a single “cliff after 35.”
+
+Across U.S.-market IMDb titles, women-coded performers supply approximately half
+of principal opportunity units around age 30. Their share then falls sharply
+through the 30s and reaches roughly one quarter to one third by age 50. The
+decline is steeper in film than television.
+
+In film, women-coded opportunity falls from
+`r pct(share_at("film", 30))` at age 30 to
+`r pct(share_at("film", 35))` at 35,
+`r pct(share_at("film", 40))` at 40,
+`r pct(share_at("film", 45))` at 45, and
+`r pct(share_at("film", 50))` at 50. Television follows the same direction,
+but retains a somewhat larger women-coded share in midlife.
+
+For established performers entering during 2000–2010, the adjusted probability
+of reaching the final year before a five-year career interruption is
+`r pct(hazard_at(30)$women_exit_hazard, 2)` for women-coded performers at age 30
+and `r pct(hazard_at(30)$men_exit_hazard, 2)` for comparable men-coded performers.
+That is an interruption-hazard ratio of `r sprintf("%.2f", hazard_at(30)$exit_hazard_ratio)`
+(95% CI `r sprintf("%.2f", hazard_at(30)$ratio_conf_low)`–`r sprintf("%.2f", hazard_at(30)$ratio_conf_high)`).
+
+The evidence therefore indicates two related patterns:
+
+1. **A representation contraction:** many fewer opportunities are occupied by
+   women as performer age rises.
+2. **An early-career continuity penalty:** established women-coded performers
+   are more likely to enter a long interruption during their late 20s and 30s.
+Among performers who have survived into the recently active pool, annual and
+five-year re-employment probabilities are much more similar. The disparity is
+therefore not well described as every working actress suddenly becoming
+unemployable at 35. It is better described as **progressive attrition followed
+by a narrower population of survivors**.
+
+The Billboard Hot 100 extension shows a parallel age contraction among
+identifiable solo artists. Across 1995–2025, women’s median chart-active age is
+`r sprintf("%.0f", billboard_weight_at("unique artist-year", "women-coded")$median_age)`,
+compared with
+`r sprintf("%.0f", billboard_weight_at("unique artist-year", "men-coded")$median_age)`
+for men. Only
+`r pct(billboard_weight_at("unique artist-year", "women-coded")$share_35_plus)`
+of women’s artist-years occur at age 35 or older, versus
+`r pct(billboard_weight_at("unique artist-year", "men-coded")$share_35_plus)`
+for men.
+
+## The age-opportunity curve
+
+An opportunity unit is one principal cast credit for a film, or participation
+in one television series during one calendar year. This prevents a performer in
+twenty episodes of one series from outweighing twenty separate film performers.
+
+```{r}
+#| label: role-share-table
+milestones <- role_share[age %in% c(30, 35, 40, 45, 50, 60, 70),
+  .(scope, age, women_share = women_coded_share)
+]
+milestone_wide <- dcast(milestones, age ~ scope, value.var = "women_share")
+for (column in intersect(c("overall", "film", "television"), names(milestone_wide))) {
+  set(milestone_wide, j = column, value = pct(milestone_wide[[column]]))
+}
+setnames(
+  milestone_wide,
+  old = intersect(c("age", "overall", "film", "television"), names(milestone_wide)),
+  new = c("Age", "All screen", "Film", "Television")[
+    match(intersect(c("age", "overall", "film", "television"), names(milestone_wide)),
+          c("age", "overall", "film", "television"))
+  ]
+)
+kable(
+  milestone_wide,
+  align = c("r", "r", "r", "r"),
+  caption = "Share of classified principal opportunities credited to women-coded performers"
+)
+```
+
+```{r}
+#| label: women-role-share-figure
+#| out-width: 100%
+knitr::include_graphics(project_path("social", "01-share-film.png"))
+```
+
+The pattern is continuous rather than a sudden disappearance at a single age.
+Women’s share is already declining during the late 20s and falls most rapidly
+from approximately 25 through the early 40s.
+
+### Is 35 the cliff?
+
+The data do not identify a unique onset at 35. Representation declines through
+the late 20s and 30s; by 35, women-coded film share has already fallen below
+40%. The decline then slows in the early 40s, leaving representation at a lower
+plateau rather than producing a later recovery.
+
+## Career continuity and five-year interruption
+
+The career analysis follows performers whose first observed principal credit
+occurred from 2000–2010 at ages 18–35 and who accumulated credits in at least two
+of their first five years. A career interruption occurs at the last credited
+year before five consecutive years without another principal credit. Death and
+the end of available data are censored.
+
+The model covers `r num(sum(spell_summary$performers))` established performers
+and adjusts for entry age, entry year, and early-career role volume. Uncertainty
+is clustered by performer.
+
+```{r}
+#| label: hazard-table
+hazard_milestones <- hazard_ratio[age %in% c(25, 30, 35, 40, 45), .(
+  Age = age,
+  `Women-coded interruption hazard` = pct(women_exit_hazard, 2),
+  `Men-coded interruption hazard` = pct(men_exit_hazard, 2),
+  `Interruption hazard ratio` = sprintf("%.2f", exit_hazard_ratio),
+  `95% CI` = sprintf("%.2f–%.2f", ratio_conf_low, ratio_conf_high)
+)]
+kable(
+  hazard_milestones,
+  align = c("r", "r", "r", "r", "r"),
+  caption = "Adjusted hazard of the first five-year career interruption"
+)
+```
+
+The women-to-men interruption difference is largest around age 30, remains elevated at
+35, and is no longer distinguishable by age 40 among this entry cohort. This
+finding survives alternative interruption definitions:
+
+- Three-year gap at age 30: ratio
+  `r sprintf("%.2f", gap_sensitivity[gap_years == 3 & age == 30, exit_hazard_ratio])`
+- Five-year gap at age 30: ratio
+  `r sprintf("%.2f", gap_sensitivity[gap_years == 5 & age == 30, exit_hazard_ratio])`
+- Seven-year gap at age 30: ratio
+  `r sprintf("%.2f", gap_sensitivity[gap_years == 7 & age == 30, exit_hazard_ratio])`
+
+```{r}
+#| label: adjusted-hazard-figure
+#| out-width: 100%
+knitr::include_graphics(project_path("social", "02-interruption.png"))
+```
+
+This is compatible with a selection process: women experience more interruptions during
+the age range when careers are being consolidated. Those who remain in the
+industry later are a more selected group, making conditional continuation rates
+look more equal than the representation totals.
+
+## Film and television are not interchangeable
+
+Film shows the largest contraction. At age 50, women-coded performers receive
+`r pct(share_at("film", 50))` of film opportunity units, compared with
+`r pct(share_at("television", 50))` in television. At age 60, the corresponding
+figures are `r pct(share_at("film", 60))` and
+`r pct(share_at("television", 60))`.
+
+Five-year forward continuity among already credited performers is also much
+closer to parity in television. Television appears to function as a partial
+career-preservation channel, although it does not eliminate the shrinking share
+of women with age.
+
+## Has the situation improved?
+
+Yes, but the shape of the disparity remains.
+
+```{r}
+#| label: period-table
+period_table <- period[
+  scope == "overall" & age %in% c(30, 35, 40, 45, 50),
+  .(period, age, women_share)
+]
+period_wide <- dcast(period_table, age ~ period, value.var = "women_share")
+period_wide[, `2000-2012` := pct(`2000-2012`)]
+period_wide[, `2013-2025` := pct(`2013-2025`)]
+setnames(period_wide, "age", "Age")
+kable(
+  period_wide,
+  align = c("r", "r", "r"),
+  caption = "Women-coded opportunity share by release period"
+)
+```
+
+The later period is approximately six percentage points more inclusive at each
+of these milestone ages. Nevertheless, women-coded opportunity still drops from
+near parity at age 30 to about 31% at age 50 in 2013–2025.
+
+## A parallel case: Billboard Hot 100 solo artists
+
+The music extension examines identifiable solo performers on weekly Billboard
+Hot 100 charts from 1995–2025. Each artist counts once per chart-active year,
+regardless of the number of songs. The analysis includes
+`r num(billboard_coverage$classified_solo_artists)` classified solo artists and
+`r num(billboard_coverage$artist_years)` artist-years. Bands, collaborations,
+and names that could not be matched reliably are excluded; the resulting solo
+sample represents
+`r pct(sum(billboard_match[credit_group %in% c("women-coded", "men-coded"), chart_row_share]))`
+of all chart rows.
+
+### Charting women are consistently younger
+
+```{r}
+#| label: billboard-age-boxplot
+#| out-width: 100%
+knitr::include_graphics(figure_path("billboard_age_boxplot.png"))
+```
+
+Across 1995–2025, the median unique artist-year age is
+`r sprintf("%.0f", billboard_weight_at("unique artist-year", "women-coded")$median_age)`
+for women and
+`r sprintf("%.0f", billboard_weight_at("unique artist-year", "men-coded")$median_age)`
+for men. Women are age 35 or older in
+`r pct(billboard_weight_at("unique artist-year", "women-coded")$share_35_plus)`
+of their chart-active years, compared with
+`r pct(billboard_weight_at("unique artist-year", "men-coded")$share_35_plus)`
+for men.
+
+The artist-week sensitivity is more unequal: only
+`r pct(billboard_weight_at("unique artist-week", "women-coded")$share_35_plus)`
+of women’s visible chart weeks occur at age 35 or older, versus
+`r pct(billboard_weight_at("unique artist-week", "men-coded")$share_35_plus)`
+for men. This indicates that the difference is not limited to how many older
+artists appear; older men also sustain substantially more weekly chart presence.
+
+### Five-year chart return diverges after 40
+
+```{r}
+#| label: billboard-return-figure
+#| out-width: 100%
+knitr::include_graphics(figure_path("billboard_return_by_age.png"))
+```
+
+Return rates are broadly similar through the 30s. At ages 40–44, however,
+`r pct(billboard_return_at("women-coded", 40))` of women’s chart-active years
+are followed by another chart year within five years, compared with
+`r pct(billboard_return_at("men-coded", 40))` for men. At ages 45–49 the rates
+are `r pct(billboard_return_at("women-coded", 45))` and
+`r pct(billboard_return_at("men-coded", 45))`, respectively. These are
+descriptive return probabilities, not proof that the industry caused the
+difference.
+
+The chart archive comes from the continuously updated
+[mhollingshead Billboard Hot 100 repository](https://github.com/mhollingshead/billboard-hot-100).
+Artist metadata are drawn from [Wikidata](https://www.wikidata.org/) and
+[MusicBrainz](https://musicbrainz.org/doc/MusicBrainz_API/Search). Billboard’s
+underlying chart methodology changes over time, so period comparisons describe
+the chart as it existed in each era rather than a mechanically identical market
+measure.
+
+## Robustness
+
+The central representation curve changes very little when:
+
+- predominant credit-class thresholds are changed from 90% to 80% or 95%;
+- roles are restricted to the top three or top five principal cast positions;
+- career interruption is defined as three, five, or seven years.
+
+All `r nrow(validation)` automated real-data validation checks passed, in
+addition to seven unit tests for the panel and metric functions.
+
+## What this study measures—and what it cannot
+
+### It measures
+
+- observed principal screen-credit opportunity by performer age;
+- film-title and television-series-year participation;
+- continued participation among recently active performers;
+- long career interruptions among an established entry cohort;
+- age distributions and five-year return among identifiable Billboard Hot 100
+  solo artists.
+
+### It does not measure
+
+- auditions, offers, or roles declined;
+- whether someone was actively seeking work;
+- salary, earnings, or employment days;
+- exact screen time or dialogue;
+- production nationality—U.S.-region title metadata indicate U.S. market
+  availability, not necessarily American ownership or filming;
+- self-identified gender. “Women-coded” and “men-coded” refer to the predominant
+  `actress` or `actor` category in IMDb’s credit metadata;
+- discriminatory intent or a uniquely causal effect of age;
+- the ages or gender composition of excluded bands, groups, and unresolved
+  collaborative Billboard credits.
+
+The results establish an age-associated opportunity and continuity gap. They do
+not, by themselves, determine how much is caused by casting discrimination,
+labor supply, career preferences, caregiving, health, representation, or other
+mechanisms.
+
+## Data and methods
+
+The source files were downloaded from the
+[IMDb Non-Commercial Datasets](https://developer.imdb.com/non-commercial-datasets/)
+on August 17, 2026. The build contains `r num(build$credits)` usable principal
+credits belonging to `r num(build$performers)` performers with birth-year data
+and `r num(build$titles)` film or television episode titles from 1995–2025.
+
+Titles were included when IMDb contained a U.S.-region alternative title for the
+title or its parent television series. Documentary, news, reality television,
+talk show, game show, and adult genres were excluded. Primary analyses use ages
+20–70 or the range supported by each cohort design.
+
+Related manual content research provides a useful external check. USC’s study of
+1,600 popular films found women represented only 23.9% of speaking characters
+aged 40 and older ([USC Annenberg Inclusion Initiative](https://annenberg.usc.edu/sites/default/files/2023/08/17/1600pop_3.pdf)).
+The Geena Davis Institute has separately documented severe underrepresentation
+of women among characters over 50
+([Women Over 50](https://geenadavisinstitute.org/research/women-over-50-the-right-to-be-seen-on-screen/))
+and gender differences in occupation, parenthood, and aging narratives among
+characters over 40
+([Missing in Action](https://geenadavisinstitute.org/research/menopause-in-film-study-2025/)).
+
+## Bottom line
+
+The strongest defensible conclusion is:
+
+> Women’s screen careers are compressed through progressive attrition beginning
+> before 35, with the steepest loss of representation extending through the
+> early 40s. Film exhibits a larger contraction than television. Women who
+> remain active later have continuation rates closer to men’s, but they represent
+> a much smaller survivor population.
+
+The parallel Billboard analysis points in the same general direction: women’s
+solo-artist chart participation is younger, contains substantially fewer
+artist-years and artist-weeks after age 35, and shows a lower five-year return
+rate after 40. Because group and collaboration credits are excluded, this music
+result should be read as evidence about identifiable solo performers rather
+than the entire recording market.
+
+The next research phase should manually code a stratified sample of roles. That
+would determine whether the quantitative disappearance shown here is accompanied
+by a loss of occupational authority, romantic agency, narrative centrality, and
+non-familial identity.

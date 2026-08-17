@@ -1,0 +1,7 @@
+"dataset","path","bytes","downloaded_at_utc"
+"names","C:/Users/BrianBalzar/Documents/Codex/data_cache/hollywood-women-careers/imdb/name.basics.tsv.gz",308245172,"2026-08-17 14:03:49 UTC"
+"titles","C:/Users/BrianBalzar/Documents/Codex/data_cache/hollywood-women-careers/imdb/title.basics.tsv.gz",225565522,"2026-08-17 14:03:49 UTC"
+"principals","C:/Users/BrianBalzar/Documents/Codex/data_cache/hollywood-women-careers/imdb/title.principals.tsv.gz",778954615,"2026-08-17 14:03:49 UTC"
+"akas","C:/Users/BrianBalzar/Documents/Codex/data_cache/hollywood-women-careers/imdb/title.akas.tsv.gz",510667278,"2026-08-17 14:03:49 UTC"
+"episodes","C:/Users/BrianBalzar/Documents/Codex/data_cache/hollywood-women-careers/imdb/title.episode.tsv.gz",54354729,"2026-08-17 14:03:49 UTC"
+"ratings","C:/Users/BrianBalzar/Documents/Codex/data_cache/hollywood-women-careers/imdb/title.ratings.tsv.gz",8616584,"2026-08-17 14:03:49 UTC"

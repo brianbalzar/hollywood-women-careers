@@ -1,0 +1,56 @@
+name: Publish report to Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - reports/index.html
+      - design-system/**
+      - social/**
+      - .github/workflows/pages.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Prepare static site
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p _site/design-system _site/social
+          cp reports/index.html _site/index.html
+          find design-system -mindepth 2 -maxdepth 2 -type f -name '*.html' -not -path '*/build/*' -print0 |
+            while IFS= read -r -d '' file; do
+              destination="_site/${file}"
+              mkdir -p "$(dirname "$destination")"
+              cp "$file" "$destination"
+            done
+          find social -maxdepth 1 -type f -name '*.png' -exec cp {} _site/social/ \;
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload site
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4
