@@ -419,6 +419,13 @@ figure, .quarto-figure {
   margin-right: auto;
 }
 
+.landscape-report-chart figure,
+.landscape-report-chart .quarto-figure {
+  width: min(600px, 100%);
+  margin-left: auto;
+  margin-right: auto;
+}
+
 // With the right-hand TOC present, a nominally wide viewport still leaves less
 // than 1,180px around the article column. Collapse to the article width before
 // the negative full-bleed margin can push a chart off the left edge.

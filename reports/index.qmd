@@ -294,11 +294,15 @@ of all chart rows.
 
 ### Charting women are consistently younger
 
+::: {.landscape-report-chart}
+
 ```{r}
 #| label: billboard-age-boxplot
 #| out-width: 100%
 knitr::include_graphics(figure_path("billboard_age_boxplot.png"))
 ```
+
+:::
 
 Across 1995–2025, the median unique artist-year age is
 `r sprintf("%.0f", billboard_weight_at("unique artist-year", "women-coded")$median_age)`
@@ -319,11 +323,15 @@ artists appear; older men also sustain substantially more weekly chart presence.
 
 ### Five-year chart return diverges after 40
 
+::: {.landscape-report-chart}
+
 ```{r}
 #| label: billboard-return-figure
 #| out-width: 100%
 knitr::include_graphics(figure_path("billboard_return_by_age.png"))
 ```
+
+:::
 
 Return rates are broadly similar through the 30s. At ages 40–44, however,
 `r pct(billboard_return_at("women-coded", 40))` of women’s chart-active years
