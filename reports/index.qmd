@@ -167,11 +167,15 @@ kable(
 )
 ```
 
+::: {.square-social-card}
+
 ```{r}
 #| label: women-role-share-figure
 #| out-width: 100%
 knitr::include_graphics(project_path("social", "01-share-film.png"))
 ```
+
+:::
 
 The pattern is continuous rather than a sudden disappearance at a single age.
 Women’s share is already declining during the late 20s and falls most rapidly
@@ -223,11 +227,15 @@ finding survives alternative interruption definitions:
 - Seven-year gap at age 30: ratio
   `r sprintf("%.2f", gap_sensitivity[gap_years == 7 & age == 30, exit_hazard_ratio])`
 
+::: {.square-social-card}
+
 ```{r}
 #| label: adjusted-hazard-figure
 #| out-width: 100%
 knitr::include_graphics(project_path("social", "02-interruption.png"))
 ```
+
+:::
 
 This is compatible with a selection process: women experience more interruptions during
 the age range when careers are being consolidated. Those who remain in the

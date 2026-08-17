@@ -409,6 +409,16 @@ figure, .quarto-figure {
   margin-right: 0;
 }
 
+// The two report replacements are square social cards rather than landscape
+// chart exports. Give them editorial breathing room without shrinking the
+// landscape Billboard figures that follow.
+.square-social-card figure,
+.square-social-card .quarto-figure {
+  width: min(560px, 100%);
+  margin-left: auto;
+  margin-right: auto;
+}
+
 // With the right-hand TOC present, a nominally wide viewport still leaves less
 // than 1,180px around the article column. Collapse to the article width before
 // the negative full-bleed margin can push a chart off the left edge.
