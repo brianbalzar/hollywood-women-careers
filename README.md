@@ -87,6 +87,20 @@ The fitted survival model (`outputs/models/career_exit_model.rds`, ~38 MB) is
 also excluded from version control. It regenerates from
 `scripts/07_fit_models.R`.
 
+### Data sources and credit
+
+- Screen records come from the
+  [IMDb Non-Commercial Datasets](https://developer.imdb.com/non-commercial-datasets/).
+- Weekly Hot 100 history comes from the maintained
+  [`mhollingshead/billboard-hot-100`](https://github.com/mhollingshead/billboard-hot-100)
+  archive of [Billboard Hot 100](https://www.billboard.com/charts/hot-100/) records.
+- Solo-artist birth date, gender label, and MusicBrainz artist identifier are
+  queried through the [Wikidata Query Service](https://query.wikidata.org/).
+
+The August 17, 2026 source snapshots are documented in `data/raw/*_manifest.csv`.
+Upstream source rows are not redistributed; see [`LICENSE-CONTENT.md`](LICENSE-CONTENT.md)
+for attribution, reuse boundaries, and licensing notes.
+
 ---
 
 ## Repository layout

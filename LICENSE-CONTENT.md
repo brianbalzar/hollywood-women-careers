@@ -52,9 +52,11 @@ extend to this project's code or content.
   record which dataset versions a given run used; they contain checksums and
   sizes, not data.
 - **Billboard.** Chart data is retrieved by `scripts/11_download_billboard.R`
-  and matched against MusicBrainz metadata. Chart rankings are a factual record,
-  but Billboard asserts rights over its charts; no chart data is redistributed
-  here either.
+  from the `mhollingshead/billboard-hot-100` archive. Solo artists are matched
+  to human records in Wikidata that include a MusicBrainz artist identifier;
+  birth date and gender labels come from Wikidata, not a MusicBrainz API query.
+  Chart rankings are a factual record, but Billboard asserts rights over its
+  charts; no chart data is redistributed here either.
 
 The aggregate tables in `outputs/tables/` are derived statistics — shares,
 rates, hazard estimates and confidence intervals computed across millions of

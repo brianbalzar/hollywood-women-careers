@@ -328,8 +328,10 @@ difference.
 
 The chart archive comes from the continuously updated
 [mhollingshead Billboard Hot 100 repository](https://github.com/mhollingshead/billboard-hot-100).
-Artist metadata are drawn from [Wikidata](https://www.wikidata.org/) and
-[MusicBrainz](https://musicbrainz.org/doc/MusicBrainz_API/Search). Billboard’s
+Artist identity, birth date, gender, and the required MusicBrainz artist
+identifier are queried through the [Wikidata Query Service](https://query.wikidata.org/).
+MusicBrainz is used as an identity-control field, not as the source of the
+demographic values. Billboard’s
 underlying chart methodology changes over time, so period comparisons describe
 the chart as it existed in each era rather than a mechanically identical market
 measure.
@@ -376,6 +378,34 @@ labor supply, career preferences, caregiving, health, representation, or other
 mechanisms.
 
 ## Data and methods
+
+### Sources and attribution
+
+- **Screen credits and performer metadata:**
+  [IMDb Non-Commercial Datasets](https://developer.imdb.com/non-commercial-datasets/),
+  specifically `name.basics`, `title.basics`, `title.principals`, `title.akas`,
+  `title.episode`, and `title.ratings`. The analysis snapshot was downloaded
+  August 17, 2026. IMDb supplies the upstream records; all classifications,
+  filters, age calculations, models, and conclusions in this report are the
+  author’s.
+- **Weekly chart history:** the
+  [`mhollingshead/billboard-hot-100`](https://github.com/mhollingshead/billboard-hot-100)
+  archive, which republishes historical records for the
+  [Billboard Hot 100](https://www.billboard.com/charts/hot-100/). The archive
+  snapshot was downloaded August 17, 2026; this study analyzes 1995–2025.
+- **Solo-artist identity metadata:** the
+  [Wikidata Query Service](https://query.wikidata.org/) supplied human-entity
+  status, birth date, gender label, and the
+  [MusicBrainz artist identifier](https://musicbrainz.org/doc/MusicBrainz_Identifier)
+  used as an additional identity requirement. MusicBrainz was not queried for
+  birth date or gender.
+- **Contextual comparison studies:** the USC Annenberg Inclusion Initiative and
+  Geena Davis Institute reports linked below are interpretive comparisons only;
+  their observations are not pooled into this project’s estimates.
+
+No upstream IMDb or Billboard source rows are redistributed. The repository
+contains code, manifests, and aggregate derived results. See the complete
+[source-data and licensing notes](https://github.com/brianbalzar/hollywood-women-careers/blob/main/LICENSE-CONTENT.md).
 
 The source files were downloaded from the
 [IMDb Non-Commercial Datasets](https://developer.imdb.com/non-commercial-datasets/)

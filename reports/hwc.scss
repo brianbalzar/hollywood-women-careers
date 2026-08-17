@@ -392,6 +392,9 @@ figure, .quarto-figure {
   background: none;
   border-radius: 0;
 
+  // Quarto wraps knitr images in a paragraph. Do not let the global prose
+  // measure leave that wrapper narrower than the figure frame.
+  > p { max-width: none; width: 100%; }
   img { width: 100%; height: auto; border-radius: 0; }
 }
 
@@ -406,7 +409,10 @@ figure, .quarto-figure {
   margin-right: 0;
 }
 
-@media (max-width: 1240px) {
+// With the right-hand TOC present, a nominally wide viewport still leaves less
+// than 1,180px around the article column. Collapse to the article width before
+// the negative full-bleed margin can push a chart off the left edge.
+@media (max-width: 1480px) {
   figure, .quarto-figure { margin-left: 0; margin-right: 0; max-width: 100%; }
 }
 
